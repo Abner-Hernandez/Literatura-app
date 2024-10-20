@@ -2,6 +2,7 @@ package com.alura.challenge.model;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public record DatosBook(
         long id,

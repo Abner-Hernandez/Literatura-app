@@ -20,10 +20,10 @@ public class Person {
     @Column(unique = true)
     private long deathYear;
 
-    @ManyToMany(mappedBy = "authors") // Para autores
+    @ManyToMany(mappedBy = "authors", fetch = FetchType.EAGER)
     private List<Book> authoredBooks = new ArrayList<>();
 
-    @ManyToMany(mappedBy = "translators") // Para traductores
+    @ManyToMany(mappedBy = "translators", fetch = FetchType.EAGER)
     private List<Book> translatedBooks = new ArrayList<>();
 
     // Constructor
@@ -82,15 +82,5 @@ public class Person {
 
     public void setTranslatedBooks(List<Book> translatedBooks) {
         this.translatedBooks = translatedBooks;
-    }
-
-    @Override
-    public String toString() {
-        return String.format("""
-            name: %s
-            birthYear: %d
-            deathYear: %d
-            """,
-                name, birthYear, deathYear);
     }
 }

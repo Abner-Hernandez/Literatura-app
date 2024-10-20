@@ -1,12 +1,13 @@
 package com.alura.challenge.principal;
 
-import com.alura.challenge.model.Book;
-import com.alura.challenge.model.DatosBook;
+import com.alura.challenge.model.*;
 import com.alura.challenge.repository.BookRepository;
 import com.alura.challenge.repository.LanguageRepository;
 import com.alura.challenge.repository.PersonRepository;
 import com.alura.challenge.service.ConsumoAPI;
 import com.alura.challenge.service.ConvierteDatos;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import jakarta.transaction.Transactional;
 
 import java.util.List;
@@ -20,11 +21,26 @@ public class Principal {
     private BookRepository bookRepository;
     private LanguageRepository languageRepository;
     private PersonRepository personRepository;
+    Gson gson;
+    Gson gsonBook;
+    Gson gsonPerson;
 
     public Principal(BookRepository bookRepository, LanguageRepository languageRepository, PersonRepository personRepository) {
         this.bookRepository = bookRepository;
         this.languageRepository = languageRepository;
         this.personRepository = personRepository;
+        this.gson = new GsonBuilder()
+                .setPrettyPrinting()
+                .create();
+        this.gsonBook = new GsonBuilder()
+                .registerTypeAdapter(Book.class, new BookAdapter())
+                .setPrettyPrinting()
+                .create();
+        this.gsonPerson = new GsonBuilder()
+                .registerTypeAdapter(Person.class, new PersonAdapter())
+                .setPrettyPrinting()
+                .create();
+
     }
 
     public void muestraElMenu() {
@@ -82,7 +98,7 @@ public class Principal {
     @Transactional
     private void buscarLibroPorNombre() {
         List<DatosBook> datos = getLibroPorNombre();
-        System.out.println(datos);
+        System.out.println(gson.toJson(datos));
         datos.stream()
                 .filter(book -> !bookRepository.existsById(book.id()))
                 .forEach(book -> {
@@ -92,11 +108,11 @@ public class Principal {
     }
 
     private void getAllRegisteredBooks() {
-        System.out.println(bookRepository.findAll());
+        System.out.println(gsonBook.toJson(bookRepository.findAll()));
     }
 
     private void getAllAuthors() {
-        System.out.println(bookRepository.findAllAuthors());
+        System.out.println(gsonPerson.toJson(bookRepository.findAllAuthors()));
     }
 
     private void getAuthorsAliveOnYear(){
@@ -105,13 +121,13 @@ public class Principal {
             System.out.print("Introduce el año a consultar: ");
             year = teclado.nextInt();
         } while (year < 0);
-        System.out.println(bookRepository.findAuthorsLivesYear(year));
+        System.out.println(gsonPerson.toJson(bookRepository.findAuthorsLivesYear(year)));
     }
 
     private void getBooksByLanguage() {
-        System.out.println(languageRepository.findBooksByLanguage(
+        System.out.println(gsonBook.toJson(languageRepository.findBooksByLanguage(
                 getUserValue("Ingrese el idioma a consultar")
-        ));
+        )));
     }
 
     private String getUserValue(String message) {

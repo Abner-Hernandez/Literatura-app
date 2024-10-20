@@ -167,32 +167,4 @@ public class Book {
     public void setDownloadCount(long downloadCount) {
         this.downloadCount = downloadCount;
     }
-
-    @Override
-    public String toString() {
-        return String.format("""
-            id: %d
-            title: %s
-            authors: %s
-            translators: %s
-            subjects: %s
-            bookshelves: %s
-            languages: %s
-            copyright: %b
-            mediaType: %s
-            formats: %s
-            downloadCount: %d
-            """,
-                id, title,
-                authors,
-                translators,
-                subjects,
-                bookshelves,
-                languages,
-                copyright,
-                mediaType,
-                formats,
-                downloadCount);
-    }
-
 }
